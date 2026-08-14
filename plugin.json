@@ -1,0 +1,19 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "ryu.drafts",
+  "version": "1.0.0",
+  "description": "A durable outbox for unsent messages: composer text is kept as a draft instead of dying with the tab, and a draft can be armed to send itself when a slot frees or a usage window reopens.",
+  "keywords": [
+    "drafts",
+    "queue",
+    "outbox",
+    "composer",
+    "usage-limits"
+  ],
+  "extensions": {
+    "com.ryuhq.ryu": {
+      "id": "@ryu/drafts",
+      "displayName": "Drafts"
+    }
+  }
+}

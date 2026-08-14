@@ -1,0 +1,45 @@
+[package]
+name = "ryu-drafts"
+# The version the publish train is on. `tools/publish-crates.sh` reads TRAIN_VERSION
+# from the FIRST crate in its list and requires every crate in the set to be on it,
+# so an apps-store backend that drifts to its own version silently breaks the
+# release. Every other `apps-store/*/backend` is on 0.1.9; so is this one.
+version = "0.1.13"
+edition = "2021"
+license = "Apache-2.0"
+description = "Drafts for Ryu: a durable outbox for unsent messages. Owns the whole spine out-of-process — the draft store, the trigger vocabulary, and the claim protocol that keeps two desktop windows from sending the same draft twice — as a SQLite-backed sidecar Core spawns and proxies to on loopback. ZERO dependency on apps/core."
+repository = "https://github.com/amajorai/ryu"
+
+# Sidecar-ONLY: this crate is a process, not a library Core links. The shape is
+# `ryu-social`'s — one `[[bin]]`, modules declared in `lib.rs`, and no `apps/core`
+# dependency in either direction. Core reaches this app exclusively through the
+# generic ext-proxy (`public_mount` at `/api/drafts`).
+[[bin]]
+name = "ryu-drafts"
+path = "src/main.rs"
+
+[lib]
+name = "ryu_drafts"
+path = "src/lib.rs"
+
+# Versions are matched to apps/core/Cargo.toml (and to the sibling apps-store
+# backends) so this crate joining the root workspace via the `apps-store/*/backend`
+# member glob introduces NO version skew for any other job building the tree.
+[dependencies]
+tokio = { version = "1", features = ["full"] }
+axum = "0.7"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+anyhow = "1"
+# Every stored instant is an INTEGER epoch-millis column; chrono is used for
+# `Utc::now()` and for parsing the RFC3339 `resets_at` a usage window carries.
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "1", features = ["v4", "serde"] }
+rusqlite = { version = "0.40.0", features = ["bundled"] }
+# The dispatcher's loopback calls to Core's kernel-capability broker. `json` only —
+# there is no multipart or streaming on this path.
+reqwest = { version = "0.12", features = ["json"] }
+tracing = "0.1"
+# Sidecar-binary-only deps (data-dir resolution + logging), mirroring `ryu-social`.
+dirs = "5"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
