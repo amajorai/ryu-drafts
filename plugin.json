@@ -1,0 +1,21 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "ryu.drafts",
+  "version": "0.1.14",
+  "description": "A durable outbox for messages you have not sent yet. Anything you type into a composer and walk away from is kept as a draft instead of being lost with the tab, and every draft lives in one node-wide store rather than inside the chat it happened to be typed in — so it survives closing the conversation, restarting the app, and moving to another project. A draft can also be armed: give it a condition and it sends itself when the condition holds. The two conditions that exist are the two that actually block work — 'fewer than N agents are running' (so a queued prompt starts the moment a slot frees instead of piling onto a machine already at capacity) and 'this agent's usage window has room again' (so a prompt written against a capped subscription goes out when the cap lifts rather than failing on send). Both are evaluated against readings the app takes from this node, and a draft whose condition never becomes true simply stays a draft — nothing is sent on a guess.",
+  "keywords": [
+    "drafts",
+    "queue",
+    "outbox",
+    "composer",
+    "scheduling",
+    "usage-limits",
+    "concurrency"
+  ],
+  "extensions": {
+    "com.ryuhq.ryu": {
+      "id": "@ryu/drafts",
+      "displayName": "Drafts"
+    }
+  }
+}
